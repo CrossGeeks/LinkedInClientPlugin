@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0;netstandard2.0;MonoAndroid80;Xamarin.iOS10;uap10.0.15063;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;</TargetFrameworks>
+    <TargetFrameworks>netstandard1.0;netstandard2.0;MonoAndroid80;Xamarin.iOS10;</TargetFrameworks>
     <AssemblyName>Plugin.LinkedInClient</AssemblyName>
     <RootNamespace>Plugin.LinkedInClient</RootNamespace>
     <PackageId>Plugin.LinkedInClient</PackageId>
@@ -16,24 +16,23 @@
     <LangVersion>default</LangVersion>
     <DefineConstants>$(DefineConstants);</DefineConstants>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">false</GenerateDocumentationFile>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     
-    <!--TODO: Fill these in-->
-    <PackageLicenseUrl>LINK TO LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>LINK TO PROJECT</PackageProjectUrl>
-    <RepositoryUrl>LINK TO PROJECT</RepositoryUrl>
-    <PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
+    <PackageLicenseUrl>https://github.com/CrossGeeks/LinkedInClientPlugin/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/CrossGeeks/LinkedInClientPlugin</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CrossGeeks/LinkedInClientPlugin</RepositoryUrl>
+    <PackageReleaseNotes>LinkedIn authentication handling added.</PackageReleaseNotes>
     <PackageIconUrl>ICON URL</PackageIconUrl>
-    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, LinkedInClient</PackageTags>
+    <PackageTags>xamarin, ios, android, xamarin.forms, plugin, LinkedInClient, authentication, linkedin</PackageTags>
     
-    <Title>LinkedInClient Plugin for Xamarin and Windows</Title>
-    <Summary>Summary of nuget</Summary>
-    <Description>Plugin Description</Description>
+    <Title>LinkedIn Client Plugin for Xamarin and Windows</Title>
+    <Summary>LinkedIn authentication handling across Xamarin.iOS and Xamarin.Android</Summary>
+    <Description>LinkedIn authentication handling across Xamarin.iOS and Xamarin.Android</Description>
 
-    <Owners>YOU</Owners>
-    <Authors>YOU</Authors>
+    <Authors>Luis Pujols</Authors>
+    <Owners>CrossGeeks</Owners>
     <Copyright>Copyright 2018</Copyright>
   </PropertyGroup>
 
@@ -48,10 +47,12 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
   </ItemGroup>
 
+  <!--
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0.15063' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="5.2.3" />
     <Compile Include="Platforms\UWP\**\*.cs" />
   </ItemGroup>
+  -->
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'MonoAndroid80' ">
     <Compile Include="Platforms\Android\**\*.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="Platforms\iOS\**\*.cs" />
   </ItemGroup>
 
-
+  <!--
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.TVOS10' ">
     <Compile Include="Platforms\TVOS\**\*.cs" />
   </ItemGroup>
@@ -75,6 +76,7 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.Mac20' ">
     <Compile Include="Platforms\macOS\**\*.cs" />
   </ItemGroup>
+  -->
 
   <!--
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
