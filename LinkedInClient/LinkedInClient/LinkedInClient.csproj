@@ -98,7 +98,5 @@
   </ItemGroup>
   -->
 
-
-
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

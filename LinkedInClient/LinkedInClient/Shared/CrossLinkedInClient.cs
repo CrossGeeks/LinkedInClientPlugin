@@ -7,7 +7,7 @@ namespace Plugin.LinkedInClient
     /// </summary>
     public static class CrossLinkedInClient
     {
-        static Lazy<ILinkedInClient> implementation = new Lazy<ILinkedInClient>(() => CreateLinkedInClient(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
+        static Lazy<ILinkedInClientManager> implementation = new Lazy<ILinkedInClientManager>(() => CreateLinkedInClient(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
         /// <summary>
         /// Gets if the plugin is supported on the current platform.
@@ -17,11 +17,11 @@ namespace Plugin.LinkedInClient
         /// <summary>
         /// Current plugin implementation to use
         /// </summary>
-        public static ILinkedInClient Current
+        public static ILinkedInClientManager Current
         {
             get
             {
-                ILinkedInClient ret = implementation.Value;
+                ILinkedInClientManager ret = implementation.Value;
                 if (ret == null)
                 {
                     throw NotImplementedInReferenceAssembly();
@@ -30,7 +30,7 @@ namespace Plugin.LinkedInClient
             }
         }
 
-        static ILinkedInClient CreateLinkedInClient()
+        static ILinkedInClientManager CreateLinkedInClient()
         {
 #if NETSTANDARD1_0 || NETSTANDARD2_0
             return null;
