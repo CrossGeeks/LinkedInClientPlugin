@@ -12,7 +12,7 @@ Fill in the basic information for your application in the form.
 ## Application Linking & Configuration
 After creating your application  we will need to configurate it to link to our Android and iOS applications, for this you will need to select the **Mobile** section in the Developer Console.
 
-![Configuring App 1](hhttps://github.com/CrossGeeks/LinkedInClientPlugin/blob/master/LinkedInClient/images/AppSettingSelectMobile.png?raw=true)
+![Configuring App 1](https://github.com/CrossGeeks/LinkedInClientPlugin/blob/master/LinkedInClient/images/AppSettingSelectMobile.png?raw=true)
 
 **2.** We will need to fill out the form with the information of our App, to enable the LinkedIn Client, and to do so we will need to provide LinkedIn with the package name and a SHA-1 certificate.
 
