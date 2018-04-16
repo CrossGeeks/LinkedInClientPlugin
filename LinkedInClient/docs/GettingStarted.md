@@ -1,8 +1,8 @@
-### Getting Started
+# Getting Started
 
 If developing an application that supports iOS and Android, make sure you installed the NuGet package into your PCL project and Client projects.
 
-### Setup
+## Setup
 * [LinkedIn Developer Console](LinkedInDeveloperConsoleSetup.md)
 * [Android Setup](AndroidSetup.md)
 * [iOS Setup](iOSSetup.md)
