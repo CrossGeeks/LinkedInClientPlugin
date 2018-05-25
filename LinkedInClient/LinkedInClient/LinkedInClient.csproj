@@ -55,8 +55,22 @@
   </ItemGroup>
   -->
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'MonoAndroid80' ">
+    <Compile Include="Platforms\Android\**\*.cs" />
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
     <Compile Include="Platforms\iOS\**\*.cs" />
+  </ItemGroup>
+
+<ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid80'">
+    <PackageReference Include="Xamarin.Android.LinkedIn" Version="1.0.1">
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
+    <PackageReference Include="Xamarin.iOS.LinkedIn" Version="1.0.1">
+    </PackageReference>
   </ItemGroup>
 
   <!--
