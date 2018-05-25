@@ -7,7 +7,7 @@ namespace Plugin.LinkedInClient
     /// </summary>
     public static class CrossLinkedInClient
     {
-		static Lazy<ILinkedInClientManager> implementation = new Lazy<ILinkedInClientManagerr>(() => CreateLinkedInClient(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
+		static Lazy<ILinkedInClientManager> implementation = new Lazy<ILinkedInClientManager>(() => CreateLinkedInClient(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
         /// <summary>
         /// Gets if the plugin is supported on the current platform.

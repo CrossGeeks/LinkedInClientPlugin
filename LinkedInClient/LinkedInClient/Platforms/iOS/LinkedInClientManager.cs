@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Plugin.LinkedInClient.Shared;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using Xamarin.iOS.LinkedIn;
 
 namespace Plugin.LinkedInClient
 {
     /// <summary>
     /// Interface for $safeprojectgroupname$
     /// </summary>
-	class LinkedInClientManager : ILinkedInClientManager
+	public class LinkedInClientManager : ILinkedInClientManager
     {
         public List<string> FieldsList { get; set; }
 

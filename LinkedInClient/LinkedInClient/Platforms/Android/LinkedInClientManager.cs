@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using LinkedIn.Droid;
 using LinkedIn.Platform;
 using LinkedIn.Platform.Errors;
 using LinkedIn.Platform.Listeners;
 using LinkedIn.Platform.Utils;
-using Plugin.GoogleClient.Shared;
+using Plugin.LinkedInClient.Shared;
 
 namespace Plugin.LinkedInClient
 {
     /// <summary>
 	/// Implementation for LinkedInClient
     /// </summary>
-	class LinkedInClientManager : Java.Lang.Object, ILinkedInClientManager, IAuthListener
+	public class LinkedInClientManager : Java.Lang.Object, ILinkedInClientManager, IAuthListener
     {
         // Class Debug Tag
         private static string Tag = typeof(LinkedInClientManager).FullName;
@@ -98,13 +96,6 @@ namespace Plugin.LinkedInClient
             return Scope.Build(Scope.RBasicprofile, Scope.REmailaddress);
         }
 
-
-        public void Dispose()
-        {
-
-        }
-
-        public IntPtr Handle { get; }
         public void OnAuthError(LIAuthError result)
         {
             System.Diagnostics.Debug.WriteLine(Tag + ": Connection to the client failed with error <" + result.ToString() + "> ");
@@ -191,5 +182,5 @@ namespace Plugin.LinkedInClient
                 });
         }
     }
-    }
+    
 }

@@ -32,14 +32,13 @@
     <Description>LinkedIn authentication handling across Xamarin.iOS and Xamarin.Android</Description>
 
     <Authors>Luis Pujols</Authors>
-    <Owners>CrossGeeks</Owners>
+    <Owners>pujolsluis,crossgeeks</Owners>
     <Copyright>Copyright 2018</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.2.0" PrivateAssets="All" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />
     <Compile Include="Shared\**\*.cs" />
-    <Compile Include="Platforms\Android\LinkedInClientManager.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">

@@ -3,8 +3,8 @@ namespace Plugin.LinkedInClient.Shared
 {
 	public class  LinkedInClientBaseException : Exception
     {
-        public static string SignInDefaultErrorMessage = "The LinkedIn Sign In could not complete it's process correctly.";
-        public static string ApiHelperErrorMessage = "The LinkedIn Sign In could not complete it's process correctly.";
+        public const string SignInDefaultErrorMessage = "The LinkedIn Sign In could not complete it's process correctly.";
+        public const string ApiHelperErrorMessage = "The LinkedIn Sign In could not complete it's process correctly.";
 
         public LinkedInClientBaseException() : base() { }
         public LinkedInClientBaseException(string message) : base(message) { }
