@@ -3,8 +3,8 @@
 Cross platform plugin for handling LinkedIn authentication.
 
 ### Setup
-* Available on Nuget: https://www.nuget.org/packages/Plugin.LinkedIn
-[![NuGet Pre Release](https://img.shields.io/nuget/vpre/Plugin.LinkedIn.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.LinkedIn)
+* Available on Nuget: https://www.nuget.org/packages/Plugin.LinkedInClient
+[![NuGet Pre Release](https://img.shields.io/nuget/vpre/Plugin.LinkedIn.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.LinkedInClient)
 * Install into your PCL project and Client projects.
 * Create your [LinkedIn Developer Console](LinkedInClient/docs/LinkedInDeveloperConsoleSetup.md) application.
 * Follow the [Android](LinkedInClient/docs/AndroidSetup.md) and [iOS](LinkedInClient/docs/iOSSetup.md) guides
