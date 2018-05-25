@@ -7,7 +7,7 @@ namespace Plugin.LinkedInClient
     /// </summary>
     public static class CrossLinkedInClient
     {
-        static Lazy<ILinkedInClientManager> implementation = new Lazy<ILinkedInClientManager>(() => CreateLinkedInClient(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
+		static Lazy<ILinkedInClientManager> implementation = new Lazy<ILinkedInClientManagerr>(() => CreateLinkedInClient(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
         /// <summary>
         /// Gets if the plugin is supported on the current platform.
@@ -36,7 +36,7 @@ namespace Plugin.LinkedInClient
             return null;
 #else
 #pragma warning disable IDE0022 // Use expression body for methods
-            return new LinkedInClientImplementation();
+            return new LinkedInClientManager();
 #pragma warning restore IDE0022 // Use expression body for methods
 #endif
         }

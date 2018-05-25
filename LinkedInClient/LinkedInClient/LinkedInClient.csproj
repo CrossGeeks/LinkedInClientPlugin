@@ -39,6 +39,7 @@
   <ItemGroup>
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.2.0" PrivateAssets="All" />
     <Compile Include="Shared\**\*.cs" />
+    <Compile Include="Platforms\Android\LinkedInClientManager.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
@@ -53,10 +54,6 @@
     <Compile Include="Platforms\UWP\**\*.cs" />
   </ItemGroup>
   -->
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'MonoAndroid80' ">
-    <Compile Include="Platforms\Android\**\*.cs" />
-  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
     <Compile Include="Platforms\iOS\**\*.cs" />
@@ -98,5 +95,8 @@
   </ItemGroup>
   -->
 
+  <ItemGroup>
+    <Compile Remove="Platforms\Android\LinkedInClientManagercs" />
+  </ItemGroup>
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>
