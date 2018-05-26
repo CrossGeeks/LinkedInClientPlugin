@@ -15,6 +15,7 @@ namespace Plugin.LinkedInClient
         public List<string> FieldsList { get; set; }
 
         static TaskCompletionSource<LinkedInResponse<string>> _loginTcs;
+        static TaskCompletionSource<LinkedInResponse<string>> _getProfileFieldsTcs;
 
         private static EventHandler<LinkedInClientResultEventArgs<string>> _onLogin;
         public event EventHandler<LinkedInClientResultEventArgs<string>> OnLogin
@@ -145,7 +146,7 @@ namespace Plugin.LinkedInClient
                     "https://api.linkedin.com/v1/people/~:(" + fields + ")?format=json";
             }
 
-            APIHelper.GetInstance(CurrentActivity).GetRequest(CurrentActivity, apiRequestUrl,
+            APIHelper.GetInstance(this).GetRequest(this, apiRequestUrl,
                 apiResponse =>
                 {
                     var linkedInArgs =
