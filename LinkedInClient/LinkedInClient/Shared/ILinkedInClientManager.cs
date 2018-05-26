@@ -77,11 +77,12 @@ namespace Plugin.LinkedInClient
     public interface ILinkedInClientManager
     {
         event EventHandler<LinkedInClientResultEventArgs<string>> OnLogin;
-        event EventHandler OnLogout;
-        Task<LinkedInResponse<string>> LoginAsync();
-        event EventHandler<LinkedInClientErrorEventArgs> OnError;
-        void GetUserProfile(List<string> fieldsList);
-        void Logout();
+		event EventHandler<LinkedInClientResultEventArgs<string>> OnGetUserProfile;
+		event EventHandler<LinkedInClientErrorEventArgs> OnError;
+		event EventHandler OnLogout;
+		Task<LinkedInResponse<string>> LoginAsync();
+		Task<LinkedInResponse<string>> GetUserProfile(List<string> fieldsList);
+		void Logout();
         bool IsLoggedIn { get; }
     }
 }

@@ -136,8 +136,17 @@ namespace Plugin.LinkedInClient
                 });
         }
 
-        public void GetUserProfile(List<string> fieldsList)
+		private static EventHandler<LinkedInClientResultEventArgs<string>> _onGetUserProfile;
+        public event EventHandler<LinkedInClientResultEventArgs<string>> OnGetUserProfile
         {
+            add => _onGetUserProfile += value;
+            remove => _onGetUserProfile -= value;
+        }
+
+        async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
+        {
+            _getProfileFieldsTcs = new TaskCompletionSource<LinkedInResponse<string>>();
+
             string fields = "";
 
             for (int i = 0; i < fieldsList.Count; i++)
@@ -168,18 +177,20 @@ namespace Plugin.LinkedInClient
                         new LinkedInClientResultEventArgs<string>(apiResponse.ResponseDataAsString, LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
 
                     // Send the result to the receivers
-				    _onLogin.Invoke(CrossLinkedInClient.Current, linkedInArgs);
-                    _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
-                }, 
+                    _onGetUserProfile.Invoke(this, linkedInArgs);
+                    _getProfileFieldsTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+                },
                 error =>
                 {
                     LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
                     errorEventArgs.Error = LinkedInClientErrorType.ApiHandlerError;
                     errorEventArgs.Message = LinkedInClientBaseException.ApiHelperErrorMessage;
-				    _onError?.Invoke(CrossLinkedInClient.Current, errorEventArgs);
+                    _onError?.Invoke(this, errorEventArgs);
 
-                    _loginTcs.TrySetException(new LinkedInClientApiHelperErrorException(error.ApiErrorResponse.Message));
+                    _getProfileFieldsTcs.TrySetException(new LinkedInClientApiHelperErrorException(error.ApiErrorResponse.Message));
                 });
+
+            return await _getProfileFieldsTcs.Task;
         }
     }
     
