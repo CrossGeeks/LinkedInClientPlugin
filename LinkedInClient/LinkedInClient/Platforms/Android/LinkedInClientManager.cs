@@ -21,10 +21,10 @@ namespace Plugin.LinkedInClient
         public static int AuthActivityID = Tag.GetHashCode() % Int16.MaxValue;
         public static LISessionManager LinkedInSessionManager { get; set; }
         public static Activity CurrentActivity { get; set; }
-        public List<string> FieldsList { get; set; }
 
         static TaskCompletionSource<LinkedInResponse<string>> _loginTcs;
-
+		static TaskCompletionSource<LinkedInResponse<string>> _getProfileFieldsTcs;
+        
         public bool IsLoggedIn { get; }
 
         public static void Initialize(Activity activity)
@@ -103,7 +103,7 @@ namespace Plugin.LinkedInClient
 
         public void OnAuthSuccess()
         {
-             GetUserProfile(FieldsList);
+             //GetUserProfile(FieldsList);
         }
 
         public void OnActivityResult(int requestCode, Result resultCode, Intent data)
