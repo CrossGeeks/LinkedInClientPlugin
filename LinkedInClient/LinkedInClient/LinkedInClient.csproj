@@ -27,7 +27,7 @@
     <PackageIconUrl>ICON URL</PackageIconUrl>
     <PackageTags>xamarin, ios, android, xamarin.forms, plugin, LinkedInClient, authentication, linkedin</PackageTags>
     
-    <Title>LinkedIn Client Plugin for Xamarin and Windows</Title>
+    <Title>LinkedIn Client Plugin for Xamarin</Title>
     <Summary>LinkedIn authentication handling across Xamarin.iOS and Xamarin.Android</Summary>
     <Description>LinkedIn authentication handling across Xamarin.iOS and Xamarin.Android</Description>
 
