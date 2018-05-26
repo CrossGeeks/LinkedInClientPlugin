@@ -119,55 +119,69 @@ namespace Plugin.LinkedInClient
             remove => _onGetUserProfile -= value;
         }
 
-        async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
+		async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
         {
             _getProfileFieldsTcs = new TaskCompletionSource<LinkedInResponse<string>>();
 
-            string fields = "";
-
-            for (int i = 0; i < fieldsList.Count; i++)
+            if (SessionManager.HasValidSession)
             {
-                if (i != fieldsList.Count - 1)
+                string fields = "";
+
+                for (int i = 0; i < fieldsList?.Count; i++)
                 {
-                    fields += fieldsList[i] + ",";
+                    if (i != fieldsList.Count - 1)
+                    {
+                        fields += fieldsList[i] + ",";
+                    }
+                    else
+                    {
+                        fields += fieldsList[i];
+                    }
                 }
-                else
+
+                var apiRequestUrl =
+                    "https://api.linkedin.com/v1/people/~?format=json";
+
+                if (fieldsList != null && fieldsList.Count > 0)
                 {
-                    fields += fieldsList[i];
+                    apiRequestUrl =
+                        "https://api.linkedin.com/v1/people/~:(" + fields + ")?format=json";
                 }
+
+                ApiHelper.SharedInstance.GetRequest(
+                    apiRequestUrl,
+                    apiResponse => {
+                        var linkedInArgs =
+                            new LinkedInClientResultEventArgs<string>(apiResponse.Data.ToString(), LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
+
+                        // Send the result to the receivers
+                        _onGetUserProfile.Invoke(this, linkedInArgs);
+                        _getProfileFieldsTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+                    },
+                    error => {
+                        LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
+                        errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
+                        errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
+                        _onError?.Invoke(this, errorEventArgs);
+
+                        // Do something with error
+                        _getProfileFieldsTcs.TrySetException(new LinkedInClientBaseException(error.LocalizedDescription));
+                    });
             }
-
-            var apiRequestUrl =
-                "https://api.linkedin.com/v1/people/~?format=json";
-
-            if (fieldsList != null && fieldsList.Count > 0)
+            else
             {
-                apiRequestUrl =
-                    "https://api.linkedin.com/v1/people/~:(" + fields + ")?format=json";
+                LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
+                errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
+                errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
+                _onError?.Invoke(this, errorEventArgs);
+
+                // Do something with error
+				_getProfileFieldsTcs.TrySetException(new LinkedInClientBaseException("The Session manager doesn't have a valid session."));
             }
-
-            APIHelper.GetInstance(this).GetRequest(this, apiRequestUrl,
-                apiResponse =>
-                {
-                    var linkedInArgs =
-                        new LinkedInClientResultEventArgs<string>(apiResponse.ResponseDataAsString, LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
-
-                    // Send the result to the receivers
-                    _onGetUserProfile.Invoke(this, linkedInArgs);
-                    _getProfileFieldsTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
-                },
-                error =>
-                {
-                    LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
-                    errorEventArgs.Error = LinkedInClientErrorType.ApiHandlerError;
-                    errorEventArgs.Message = LinkedInClientBaseException.ApiHelperErrorMessage;
-                    _onError?.Invoke(this, errorEventArgs);
-
-                    _getProfileFieldsTcs.TrySetException(new LinkedInClientApiHelperErrorException(error.ApiErrorResponse.Message));
-                });
 
             return await _getProfileFieldsTcs.Task;
         }
+
 
         public bool IsLoggedIn { get; }
     }
