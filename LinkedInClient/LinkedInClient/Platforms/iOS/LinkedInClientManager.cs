@@ -99,65 +99,73 @@ namespace Plugin.LinkedInClient
                         _onLogin.Invoke(this, linkedInArgs);
                         _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
                     },
-                    error => {
-                        //TODO REPLACE By Exceptions
-                        var linkedInArgs =
-                            new LinkedInClientResultEventArgs<string>(null, LinkedInActionStatus.Error, error.LocalizedDescription);
+                    error => {               
+    					LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
+                        errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
+                        errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
+                        _onError?.Invoke(CrossLinkedInClient.Current, errorEventArgs);
 
-                        // Send the result to the receivers
-					    _onLogin.Invoke(CrossLinkedInClient.Current, linkedInArgs);
-                        _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+                        // Do something with error
+                        _loginTcs.TrySetException(new LinkedInClientBaseException(error.LocalizedDescription));
                     });
             }
         }
 
-        public void GetUserProfile(List<string> fieldsList)
+		private static EventHandler<LinkedInClientResultEventArgs<string>> _onGetUserProfile;
+        public event EventHandler<LinkedInClientResultEventArgs<string>> OnGetUserProfile
         {
-            if (SessionManager.HasValidSession)
+            add => _onGetUserProfile += value;
+            remove => _onGetUserProfile -= value;
+        }
+
+        async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
+        {
+            _getProfileFieldsTcs = new TaskCompletionSource<LinkedInResponse<string>>();
+
+            string fields = "";
+
+            for (int i = 0; i < fieldsList.Count; i++)
             {
-                string fields = "";
-
-                for (int i = 0; i < fieldsList?.Count; i++)
+                if (i != fieldsList.Count - 1)
                 {
-                    if (i != fieldsList.Count - 1)
-                    {
-                        fields += fieldsList[i] + ",";
-                    }
-                    else
-                    {
-                        fields += fieldsList[i];
-                    }
+                    fields += fieldsList[i] + ",";
                 }
-
-                var apiRequestUrl =
-                    "https://api.linkedin.com/v1/people/~?format=json";
-
-                if (fieldsList != null && fieldsList.Count > 0)
+                else
                 {
-                    apiRequestUrl =
-                        "https://api.linkedin.com/v1/people/~:(" + fields + ")?format=json";
+                    fields += fieldsList[i];
                 }
-
-                ApiHelper.SharedInstance.GetRequest(
-                    apiRequestUrl,
-                    apiResponse => {
-                        var linkedInArgs =
-                            new LinkedInClientResultEventArgs<string>(apiResponse.Data.ToString(), LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
-
-                        // Send the result to the receivers
-					    _onLogin.Invoke(CrossLinkedInClient.Current, linkedInArgs);
-                        _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
-                    },
-                    error => {
-                        //TODO REPLACE By Exceptions
-                        var linkedInArgs =
-                            new LinkedInClientResultEventArgs<string>(null, LinkedInActionStatus.Error, error.LocalizedDescription);
-
-                        // Send the result to the receivers
-					    _onLogin.Invoke(CrossLinkedInClient.Current, linkedInArgs);
-                        _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
-                    });
             }
+
+            var apiRequestUrl =
+                "https://api.linkedin.com/v1/people/~?format=json";
+
+            if (fieldsList != null && fieldsList.Count > 0)
+            {
+                apiRequestUrl =
+                    "https://api.linkedin.com/v1/people/~:(" + fields + ")?format=json";
+            }
+
+            APIHelper.GetInstance(CurrentActivity).GetRequest(CurrentActivity, apiRequestUrl,
+                apiResponse =>
+                {
+                    var linkedInArgs =
+                        new LinkedInClientResultEventArgs<string>(apiResponse.ResponseDataAsString, LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
+
+                    // Send the result to the receivers
+                    _onGetUserProfile.Invoke(this, linkedInArgs);
+                    _getProfileFieldsTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+                },
+                error =>
+                {
+                    LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
+                    errorEventArgs.Error = LinkedInClientErrorType.ApiHandlerError;
+                    errorEventArgs.Message = LinkedInClientBaseException.ApiHelperErrorMessage;
+                    _onError?.Invoke(this, errorEventArgs);
+
+                    _getProfileFieldsTcs.TrySetException(new LinkedInClientApiHelperErrorException(error.ApiErrorResponse.Message));
+                });
+
+            return await _getProfileFieldsTcs.Task;
         }
 
         public bool IsLoggedIn { get; }
