@@ -33,7 +33,7 @@ Here you will find detailed documentation on setting up and using the LinkedIn C
 * [Android Setup](LinkedInClient/docs/AndroidSetup.md)
 * [iOS Setup](LinkedInClient/docs/iOSSetup.md)
 
-### Google Client Sample Application
+### LinkedIn Client Sample Application
 * *Under Development*
 
 ### References
