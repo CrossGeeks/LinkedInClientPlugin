@@ -83,6 +83,11 @@ namespace Plugin.LinkedInClient
 		Task<LinkedInResponse<string>> LoginAsync();
 		Task<LinkedInResponse<string>> GetUserProfile(List<string> fieldsList);
 		void Logout();
+
+        string ActiveToken { get; }
+
+        DateTime TokenExpirationDate { get; }
+
         bool IsLoggedIn { get; }
     }
 }

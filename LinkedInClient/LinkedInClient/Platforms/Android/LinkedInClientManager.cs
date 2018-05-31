@@ -24,6 +24,26 @@ namespace Plugin.LinkedInClient
 
         static TaskCompletionSource<LinkedInResponse<string>> _loginTcs;
 		static TaskCompletionSource<LinkedInResponse<string>> _getProfileFieldsTcs;
+
+		public string ActiveToken
+        {
+            get
+            {
+                if (LinkedInSessionManager != null)
+                    return LinkedInSessionManager.Session.AccessToken?.Value;
+                return string.Empty;
+            }
+        }
+
+        public DateTime TokenExpirationDate
+        {
+            get
+            {
+                if (LinkedInSessionManager != null)
+                    return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(LinkedInSessionManager.Session.AccessToken.ExpiresOn);
+                return TokenExpirationDate;
+            }
+        }
         
         public bool IsLoggedIn { get; }
 

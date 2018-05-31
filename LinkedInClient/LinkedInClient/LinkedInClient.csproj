@@ -23,7 +23,7 @@
     <PackageLicenseUrl>https://github.com/CrossGeeks/LinkedInClientPlugin/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/CrossGeeks/LinkedInClientPlugin</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CrossGeeks/LinkedInClientPlugin</RepositoryUrl>
-    <PackageReleaseNotes>LinkedIn Exception handling, the plugin icon added, Custom User Profile request method added.</PackageReleaseNotes>
+    <PackageReleaseNotes>New ActiveToken, and TokenExpirationDate properties exposed for the client.</PackageReleaseNotes>
     <PackageIconUrl>https://github.com/CrossGeeks/LinkedInClientPlugin/blob/master/LinkedInClient/art/icon.png?raw=true</PackageIconUrl>
     <PackageTags>xamarin, ios, android, xamarin.forms, plugin, LinkedInClient, authentication, linkedin</PackageTags>
     
