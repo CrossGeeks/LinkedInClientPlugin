@@ -21,7 +21,7 @@
 protected override void OnActivityResult(int requestCode, Result resultCode, Android.Content.Intent data)
 {
     base.OnActivityResult(requestCode, resultCode, data);
-    LinkedInClientManager.OnAuthCompleted(requestCode, resultCode, data);
+    LinkedInClientManager.OnActivityResult(requestCode, resultCode, data);
 }
 ```
 
