@@ -126,7 +126,7 @@ namespace Plugin.LinkedInClient
              //GetUserProfile(FieldsList);
         }
 
-        public void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        public static void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             LISessionManager.GetInstance(Application.Context).OnActivityResult(CurrentActivity, requestCode, (int) resultCode, data);
         }
