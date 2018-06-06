@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.iOS.LinkedIn;
+using Foundation;
+using UIKit;
 
 namespace Plugin.LinkedInClient
 {
@@ -13,7 +15,7 @@ namespace Plugin.LinkedInClient
 	public class LinkedInClientManager : ILinkedInClientManager
     {
         public List<string> FieldsList { get; set; }
-
+		public bool IsLoggedIn { get; }
         static TaskCompletionSource<LinkedInResponse<string>> _loginTcs;
         static TaskCompletionSource<LinkedInResponse<string>> _getProfileFieldsTcs;
 
@@ -201,7 +203,13 @@ namespace Plugin.LinkedInClient
             return await _getProfileFieldsTcs.Task;
         }
 
-
-        public bool IsLoggedIn { get; }
+		public static bool OpenUrl(UIApplication application, NSUrl url, string sourceApplication, NSObject annotation)
+        {
+            if (CallbackHandler.ShouldHandleUrl(url))
+            {
+                CallbackHandler.OpenUrl(application, url, sourceApplication, annotation);
+            }
+            return true;
+        }
     }
 }
