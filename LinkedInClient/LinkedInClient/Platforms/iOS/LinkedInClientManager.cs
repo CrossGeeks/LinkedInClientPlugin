@@ -140,7 +140,7 @@ namespace Plugin.LinkedInClient
             remove => _onGetUserProfile -= value;
         }
 
-		public async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
+		public async Task<LinkedInResponse<string>> GetUserProfile(List<string> fieldsList)
         {
             _getProfileFieldsTcs = new TaskCompletionSource<LinkedInResponse<string>>();
 
