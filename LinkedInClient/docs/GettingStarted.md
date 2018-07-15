@@ -9,7 +9,7 @@ If developing an application that supports iOS and Android, make sure you instal
 
 ### Login
 
-Here is an example on how to launch the login to the Google Client:
+Here is an example on how to launch the login to the LinkedIn Client:
 
 ```cs
     CrossLinkedInClient.Current.LoginAsync();
@@ -27,7 +27,7 @@ This method returns a LinkedInResponse<string> which contains the basic profile 
 
 ### Logout
 
-Here is an example on how to logout of the Google Client:
+Here is an example on how to logout of the LinkedIn Client:
 
 ```cs
     CrossLinkedInClient.Current.Logout();
@@ -79,7 +79,7 @@ Login event:
 ```cs
     // Indicates the Sign in process couldn't complete it's process correctly
     LinkedInClientBaseException
-    
+
     // Indicates an error with the API has occured.
     LinkedInClientApiHelperErrorException
 ```
