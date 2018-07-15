@@ -56,7 +56,7 @@ namespace Plugin.LinkedInClient
         {
             _onError?.Invoke(CrossLinkedInClient.Current, e);
         }
-
+        
         public async Task<LinkedInResponse<string>> LoginAsync()
         {
             _loginTcs = new TaskCompletionSource<LinkedInResponse<string>>();
@@ -104,7 +104,7 @@ namespace Plugin.LinkedInClient
             OnLogoutCompleted(EventArgs.Empty);
         }
 
-        void GetUserProfile()
+        public void GetUserProfile()
         {
             if (SessionManager.HasValidSession)
             {
@@ -140,7 +140,7 @@ namespace Plugin.LinkedInClient
             remove => _onGetUserProfile -= value;
         }
 
-		async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
+		public async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
         {
             _getProfileFieldsTcs = new TaskCompletionSource<LinkedInResponse<string>>();
 

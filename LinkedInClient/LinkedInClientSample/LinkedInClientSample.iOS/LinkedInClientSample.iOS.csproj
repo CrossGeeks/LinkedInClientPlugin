@@ -128,8 +128,11 @@
     <PackageReference Include="PropertyChanged.Fody">
       <Version>2.5.8</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Plugin.LinkedInClient">
-      <Version>1.0.1-beta</Version>
+      <Version>1.0.2-beta</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

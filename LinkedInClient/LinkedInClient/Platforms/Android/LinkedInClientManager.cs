@@ -131,7 +131,7 @@ namespace Plugin.LinkedInClient
             LISessionManager.GetInstance(Application.Context).OnActivityResult(CurrentActivity, requestCode, (int) resultCode, data);
         }
 
-        void GetUserProfile()
+        public void GetUserProfile()
         {
             var apiRequestUrl =
                 "https://api.linkedin.com/v1/people/~?format=json";
@@ -163,7 +163,7 @@ namespace Plugin.LinkedInClient
             remove => _onGetUserProfile -= value;
         }
 
-        async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
+        public async Task<LinkedInResponse<string>> ILinkedInClientManager.GetUserProfile(List<string> fieldsList)
         {
             _getProfileFieldsTcs = new TaskCompletionSource<LinkedInResponse<string>>();
 
