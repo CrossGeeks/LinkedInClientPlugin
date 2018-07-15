@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Plugin.LinkedInClient;
 
 namespace LinkedInClientSample.Droid
 {
@@ -19,8 +20,15 @@ namespace LinkedInClientSample.Droid
 
             base.OnCreate(bundle);
 
+			LinkedInClientManager.Initialize(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
+        }
+
+		protected override void OnActivityResult(int requestCode, Result resultCode, Android.Content.Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            LinkedInClientManager.OnActivityResult(requestCode, resultCode, data);
         }
     }
 }

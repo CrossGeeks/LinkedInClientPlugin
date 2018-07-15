@@ -69,6 +69,9 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter">
       <Version>27.0.2.1</Version>
     </PackageReference>
+    <PackageReference Include="Plugin.LinkedInClient">
+      <Version>1.0.1-beta</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
