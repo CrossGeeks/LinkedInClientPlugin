@@ -15,6 +15,7 @@ Cross platform plugin for handling LinkedIn authentication.
 * Check out [Getting Started](LinkedInClient/docs/GettingStarted.md)
 
 **Platform Support**
+
 |Platform|Version|
 | ------------------- | :------------------: |
 |Xamarin.iOS|iOS 8+|
