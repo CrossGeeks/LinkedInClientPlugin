@@ -4,7 +4,10 @@
              xmlns:local="clr-namespace:LinkedInClientSample"
              xmlns:converter="clr-namespace:LinkedInClientSample.Views.Converter"
              x:Class="LinkedInClientSample.LoginPage"
-             Padding="16">
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             Padding="16"
+             Title="Home">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,7 +18,7 @@
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
-            <Label Text="Welcome to LinkedIn Auth App!"
+            <Label Text="Welcome to LinkedIn Client App!"
                    HorizontalOptions="CenterAndExpand" VerticalOptions="Start"
                    FontSize="20"
                    TextColor="#212121"
@@ -34,7 +37,7 @@
                              IsVisible="{Binding IsLoggedIn}">
                     <Image WidthRequest="120"
                            HeightRequest="120"
-                           Source="{Binding user.Picture}"
+                           Source="{Binding User.Picture}"
                            IsVisible="{Binding IsLoggedIn}"/>
                     <StackLayout Orientation="Vertical"
                                  Spacing="8"
@@ -43,12 +46,12 @@
                         <Label Text="Name:"
                                TextColor="#212121"
                                FontSize="16"/>
-                        <Label Text="{Binding user.Name}"
+                        <Label Text="{Binding User.Name}"
                                Margin="16,0,0,0"/>
                         <Label Text="Email:"
                                TextColor="#212121"
                                FontSize="16"/>
-                        <Label Text="{Binding user.Email}"
+                        <Label Text="{Binding User.Email}"
                                Margin="16,0,0,0"/>
                     </StackLayout>
                 </StackLayout>
@@ -58,13 +61,15 @@
                     VerticalOptions="EndAndExpand"
                     IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertBooleanConverter}}"
                     Command="{Binding LoginCommand}"
-                    BackgroundColor="Accent"/>
+                    BackgroundColor="Accent"
+                    Margin="16"/>
 
             <Button Text="Logout" TextColor="White"
                     VerticalOptions="EndAndExpand"
                     IsVisible="{Binding IsLoggedIn}"
                     Command="{Binding LogoutCommand}"
-                    BackgroundColor="Accent"/>
+                    BackgroundColor="Accent"
+                    Margin="16"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

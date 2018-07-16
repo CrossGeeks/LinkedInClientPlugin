@@ -13,27 +13,27 @@ namespace LinkedInClientSample.ViewModels
 {
 	public class LoginPageViewModel : INotifyPropertyChanged
     {
-		public LinkedInUser user { get; set; } = new LinkedInUser();
-		LinkedInClientManager LinkedInClientManager { get; set; } = (Plugin.LinkedInClient.LinkedInClientManager)CrossLinkedInClient.Current;
+		public LinkedInUser User { get; set; } = new LinkedInUser();
+		LinkedInClientManager LinkedInClientManager { get; set; } = (LinkedInClientManager)CrossLinkedInClient.Current;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public string Name
         {
-            get { return user.Name; }
-            set { user.Name = value; }
+            get { return User.Name; }
+            set { User.Name = value; }
         }
 
         public string Email
         {
-            get { return user.Email; }
-            set { user.Email = value; }
+            get { return User.Email; }
+            set { User.Email = value; }
         }
 
         public Uri Picture
         {
-            get { return user.Picture; }
-            set { user.Picture = value; }
+            get { return User.Picture; }
+            set { User.Picture = value; }
         }
 
         public bool IsLoggedIn { get; set; }
@@ -53,23 +53,25 @@ namespace LinkedInClientSample.ViewModels
         {
 			LinkedInClientManager.OnLogin += OnLoginCompleted;
             LinkedInClientManager.OnError += OnAuthError;
-
-            LinkedInClientManager.OnError += (sender, e) =>
+            
+            // Example of OnError Event
+			LinkedInClientManager.OnError += async (sender, exception) =>
             {
-
+				await App.Current.MainPage.DisplayAlert("Error", exception.Message, "OK");
+                LinkedInClientManager.OnLogin -= OnLoginCompleted;
+                LinkedInClientManager.OnError -= OnAuthError;
             };
 
+            // Example of GetUserProfile successfull Event
             LinkedInClientManager.OnGetUserProfile += (sender, e) =>
             {
                 var data = JObject.Parse(e.Data);
-                user.Email = data["emailAddress"].ToString();
-                user.Picture = new Uri(data["pictureUrl"].ToString());
+                User.Email = data["emailAddress"].ToString();
+                User.Picture = new Uri(data["pictureUrl"].ToString());
                 var token = LinkedInClientManager.ActiveToken;
                 var expirationDate = LinkedInClientManager.TokenExpirationDate;
             };
 
-
-            List<string> fieldsList = new List<string> { "first-name", "last-name", "email-address", "picture-url" };
             try
             {
                 await LinkedInClientManager.LoginAsync();
@@ -82,25 +84,24 @@ namespace LinkedInClientSample.ViewModels
             }
         }
 
-        private void OnAuthError(object sender, LinkedInClientErrorEventArgs e)
+        void OnAuthError(object sender, LinkedInClientErrorEventArgs e)
         {
             App.Current.MainPage.DisplayAlert("Error", e.Message, "OK");
         }
 
-        private void OnLoginCompleted(object sender, LinkedInClientResultEventArgs<string> linkedInClientResultEventArgs)
+        // Method executed if the login was successful
+        void OnLoginCompleted(object sender, LinkedInClientResultEventArgs<string> linkedInClientResultEventArgs)
         {
             if (linkedInClientResultEventArgs.Data != null)
             {
                 Debug.WriteLine("JSON RESPONSE: " + linkedInClientResultEventArgs.Data);
                 var data = JObject.Parse(linkedInClientResultEventArgs.Data);
 
-                user.Name = data["firstName"] + " " + data["lastName"];
-
+                User.Name = data["firstName"] + " " + data["lastName"];
+	
+                // Example use of custom profile method
                 List<string> fieldsList = new List<string> { "first-name", "last-name", "email-address", "picture-url" };
                 GetCustomProfileCommand.Execute(fieldsList);
-                //user.Email = data["emailAddress"].ToString();
-                //user.Picture = new Uri(data["pictureUrl"].ToString());
-                // App.Current.MainPage.DisplayAlert("Success", "It works!", "OK");
 
                 IsLoggedIn = true;
             }
@@ -129,18 +130,17 @@ namespace LinkedInClientSample.ViewModels
             }
         }
 
-        private void OnGetProfileCompleted(object sender, LinkedInClientResultEventArgs<string> linkedInClientResultEventArgs)
+		// Method executed of the GetProfile Event
+        void OnGetProfileCompleted(object sender, LinkedInClientResultEventArgs<string> linkedInClientResultEventArgs)
         {
             if (linkedInClientResultEventArgs.Data != null)
             {
                 Debug.WriteLine("JSON RESPONSE: " + linkedInClientResultEventArgs.Data);
                 var data = JObject.Parse(linkedInClientResultEventArgs.Data);
 
-                user.Name = data["firstName"] + " " + data["lastName"];
-                user.Email = data["emailAddress"].ToString();
-                user.Picture = new Uri(data["pictureUrl"].ToString());
-                // App.Current.MainPage.DisplayAlert("Success", "It works!", "OK");
-                //IsLoggedIn = true;
+                User.Name = data["firstName"] + " " + data["lastName"];
+                User.Email = data["emailAddress"].ToString();
+                User.Picture = new Uri(data["pictureUrl"].ToString());
             }
             else
             {
@@ -150,7 +150,8 @@ namespace LinkedInClientSample.ViewModels
             LinkedInClientManager.OnError -= OnAuthError;
         }
 
-        private void OnGetProfileError(object sender, LinkedInClientErrorEventArgs e)
+        // Method to receive errors of the GetProfile call
+        void OnGetProfileError(object sender, LinkedInClientErrorEventArgs e)
         {
             App.Current.MainPage.DisplayAlert("Error", e.Message, "OK");
         }
@@ -161,7 +162,8 @@ namespace LinkedInClientSample.ViewModels
             LinkedInClientManager.Logout();
         }
 
-        private void OnLogoutCompleted(object sender, EventArgs loginEventArgs)
+        // Example Logout Event
+        void OnLogoutCompleted(object sender, EventArgs loginEventArgs)
         {
             IsLoggedIn = false;
             LinkedInClientManager.OnLogout -= OnLogoutCompleted;
