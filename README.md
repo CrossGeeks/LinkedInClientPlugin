@@ -2,6 +2,10 @@
 
 Cross platform plugin for handling LinkedIn authentication.
 
+<p align="center">
+<img src="https://github.com/CrossGeeks/LinkedInClientPlugin/blob/master/LinkedInClient/images/linkedinclient.gif" height="400" width="240" title="LinkedIn Client Sample App"/>
+</p>
+
 ### Setup
 * Available on Nuget: https://www.nuget.org/packages/Plugin.LinkedInClient
 [![NuGet Pre Release](https://img.shields.io/nuget/vpre/Plugin.LinkedInClient.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.LinkedInClient)
