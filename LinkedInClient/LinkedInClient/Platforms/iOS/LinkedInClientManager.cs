@@ -18,8 +18,10 @@ namespace Plugin.LinkedInClient
 		public bool IsLoggedIn { get; }
         static TaskCompletionSource<LinkedInResponse<string>> _loginTcs;
         static TaskCompletionSource<LinkedInResponse<string>> _getProfileFieldsTcs;
+        string _apiResponseData { get; set; }
+        int _apiResponseCode { get; set; }
 
-		public string ActiveToken 
+        public string ActiveToken 
         {
             get
             {
@@ -62,25 +64,45 @@ namespace Plugin.LinkedInClient
             _loginTcs = new TaskCompletionSource<LinkedInResponse<string>>();
             //FieldsList = fieldsList;
 
-            SessionManager.CreateSessionWithAuth(
-                new[] { Permission.BasicProfile, Permission.EmailAddress },
-                "state",
-                true,
-                returnState =>
-                {
-                    GetUserProfile();
-                    Debug.WriteLine("Auth Successful");
-                },
-                error =>
-                {
-                    LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
-                    errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
-                    errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
-                    _onError?.Invoke(CrossLinkedInClient.Current, errorEventArgs);
+            if(SessionManager.HasValidSession)
+            {
+                var linkedInArgs =
+                           new LinkedInClientResultEventArgs<string>(_apiResponseData, LinkedInActionStatus.Completed, _apiResponseCode.ToString());
+
+                // Send the result to the receivers
+                _onLogin?.Invoke(CrossLinkedInClient.Current, linkedInArgs);
+                _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+            }
+            else
+            {
+                SessionManager.CreateSessionWithAuth(
+                 new[] { Permission.BasicProfile, Permission.EmailAddress },
+                 "state",
+                 true,
+             returnState =>
+             {
+                 Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                 Console.WriteLine($"SIGNED IN: YES");
+                 GetUserProfile();
+                 Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                 Console.WriteLine($"SIGNED IN ENDED");
+
+             },
+             error =>
+             {
+                 Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                 Console.WriteLine($"SIGNED IN: ERROR");
+                 LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
+                 errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
+                 errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
+                 _onError?.Invoke(CrossLinkedInClient.Current, errorEventArgs);
 
                     // Do something with error
                     _loginTcs.TrySetException(new LinkedInClientBaseException(error.LocalizedDescription));
-                });
+                 Debug.WriteLine("------------LINKEDIN PLUGIN------------");
+                 Debug.WriteLine($"SIGNED IN: ERROR ENDED");
+             });
+            }
 
             return await _loginTcs.Task;
         }
@@ -116,16 +138,27 @@ namespace Plugin.LinkedInClient
                     apiResponse => {
                         var linkedInArgs =
                             new LinkedInClientResultEventArgs<string>(apiResponse.Data.ToString(), LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
-
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"GET PROFILE: YES");
                         // Send the result to the receivers
-                        _onLogin.Invoke(this, linkedInArgs);
+                        _onLogin?.Invoke(this, linkedInArgs);
                         _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"GET PROFILE ENDED");
                     },
-                    error => {               
-    					LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
+                    error => {
+
+
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"Logged In: ERROR GET PROFILE");
+
+                        LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
                         errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
                         errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
                         _onError?.Invoke(CrossLinkedInClient.Current, errorEventArgs);
+
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"Logged In: ERROR GET PROFILE ENDED");
 
                         // Do something with error
                         _loginTcs.TrySetException(new LinkedInClientBaseException(error.LocalizedDescription));
@@ -143,7 +176,6 @@ namespace Plugin.LinkedInClient
 		public async Task<LinkedInResponse<string>> GetUserProfile(List<string> fieldsList)
         {
             _getProfileFieldsTcs = new TaskCompletionSource<LinkedInResponse<string>>();
-
             if (SessionManager.HasValidSession)
             {
                 string fields = "";
@@ -175,11 +207,20 @@ namespace Plugin.LinkedInClient
                         var linkedInArgs =
                             new LinkedInClientResultEventArgs<string>(apiResponse.Data.ToString(), LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
 
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"GET PROFILE CUSTOM: YES");
+
                         // Send the result to the receivers
-                        _onGetUserProfile.Invoke(this, linkedInArgs);
+                        _onGetUserProfile?.Invoke(this, linkedInArgs);
                         _getProfileFieldsTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"GET PROFILE CUSTOM ENDED");
                     },
                     error => {
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"GET PROFILE CUSTOM ERROR: YES");
+
                         LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
                         errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
                         errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
@@ -187,10 +228,14 @@ namespace Plugin.LinkedInClient
 
                         // Do something with error
                         _getProfileFieldsTcs.TrySetException(new LinkedInClientBaseException(error.LocalizedDescription));
+                        Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                        Console.WriteLine($"GET PROFILE CUSTOM ERROR ENDED");
                     });
             }
             else
             {
+                Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                Console.WriteLine($"GET PROFILE CUSTOM NO VALID SESSION: YES");
                 LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
                 errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
                 errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
@@ -198,6 +243,8 @@ namespace Plugin.LinkedInClient
 
                 // Do something with error
 				_getProfileFieldsTcs.TrySetException(new LinkedInClientBaseException("The Session manager doesn't have a valid session."));
+                Console.WriteLine("------------LINKEDIN PLUGIN------------");
+                Console.WriteLine($"GET PROFILE CUSTOM NO VALID SESSION ENDED");
             }
 
             return await _getProfileFieldsTcs.Task;
@@ -205,10 +252,15 @@ namespace Plugin.LinkedInClient
 
 		public static bool OpenUrl(UIApplication application, NSUrl url, string sourceApplication, NSObject annotation)
         {
+            Console.WriteLine("------------LINKEDIN PLUGIN------------");
+            Console.WriteLine($"Should handle url OPEN URL: {CallbackHandler.ShouldHandleUrl(url)}");
             if (CallbackHandler.ShouldHandleUrl(url))
             {
                 CallbackHandler.OpenUrl(application, url, sourceApplication, annotation);
             }
+            Console.WriteLine("------------LINKEDIN PLUGIN------------");
+            Console.WriteLine($"Should handle url OPEN URL ENDED");
+
             return true;
         }
     }

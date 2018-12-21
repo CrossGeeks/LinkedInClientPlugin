@@ -21,6 +21,8 @@ namespace Plugin.LinkedInClient
         public static int AuthActivityID = Tag.GetHashCode() % Int16.MaxValue;
         public static LISessionManager LinkedInSessionManager { get; set; }
         public static Activity CurrentActivity { get; set; }
+        string _apiResponseData { get; set; }
+        int _apiResponseCode { get; set; }
 
         static TaskCompletionSource<LinkedInResponse<string>> _loginTcs;
 		static TaskCompletionSource<LinkedInResponse<string>> _getProfileFieldsTcs;
@@ -63,19 +65,34 @@ namespace Plugin.LinkedInClient
         public async Task<LinkedInResponse<string>> LoginAsync()
         {
             _loginTcs = new TaskCompletionSource<LinkedInResponse<string>>();
-            LinkedInSessionManager.Init(CurrentActivity, BuildScope(), true, () =>
-            {
-                GetUserProfile();
-            }, error =>
-            {
-                LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
-                errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
-                errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
-				_onError?.Invoke(CrossLinkedInClient.Current, errorEventArgs);
 
-                // Do something with error
-                _loginTcs.TrySetException(new LinkedInClientBaseException(error.ToString()));
-            });
+
+            if(LinkedInSessionManager.Session != null && LinkedInSessionManager.Session.IsValid)
+            {
+                var linkedInArgs =
+                        new LinkedInClientResultEventArgs<string>(_apiResponseData, LinkedInActionStatus.Completed, _apiResponseCode.ToString());
+
+                // Send the result to the receivers
+                _onLogin?.Invoke(CrossLinkedInClient.Current, linkedInArgs);
+                _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
+            }
+            else
+            {
+                LinkedInSessionManager.Init(CurrentActivity, BuildScope(), true, () =>
+                {
+                    GetUserProfile();
+                }, error =>
+                {
+                    LinkedInClientErrorEventArgs errorEventArgs = new LinkedInClientErrorEventArgs();
+                    errorEventArgs.Error = LinkedInClientErrorType.SignInDefaultError;
+                    errorEventArgs.Message = LinkedInClientBaseException.SignInDefaultErrorMessage;
+                    _onError?.Invoke(CrossLinkedInClient.Current, errorEventArgs);
+
+                    // Do something with error
+                    _loginTcs.TrySetException(new LinkedInClientBaseException(error.ToString()));
+                });
+            }
+            
 
             return await _loginTcs.Task;
         }
@@ -142,7 +159,7 @@ namespace Plugin.LinkedInClient
                         new LinkedInClientResultEventArgs<string>(apiResponse.ResponseDataAsString, LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
 
                     // Send the result to the receivers
-				    _onLogin.Invoke(CrossLinkedInClient.Current, linkedInArgs);
+				    _onLogin?.Invoke(CrossLinkedInClient.Current, linkedInArgs);
                     _loginTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
                 },
                 error =>
@@ -197,7 +214,7 @@ namespace Plugin.LinkedInClient
                         new LinkedInClientResultEventArgs<string>(apiResponse.ResponseDataAsString, LinkedInActionStatus.Completed, apiResponse.StatusCode.ToString());
 
                     // Send the result to the receivers
-                    _onGetUserProfile.Invoke(this, linkedInArgs);
+                    _onGetUserProfile?.Invoke(this, linkedInArgs);
                     _getProfileFieldsTcs.TrySetResult(new LinkedInResponse<string>(linkedInArgs));
                 },
                 error =>
