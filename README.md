@@ -1,4 +1,4 @@
-# LinkedIn Client Plugin for Xamarin iOS and Android
+# LinkedIn Client Plugin for Xamarin iOS and Android [DEPRECATED]
 
 Cross platform plugin for handling LinkedIn authentication.
 
